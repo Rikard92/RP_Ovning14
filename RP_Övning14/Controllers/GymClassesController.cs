@@ -22,6 +22,7 @@ namespace RP_Övning14.Controllers
         // GET: GymClasses
         public async Task<IActionResult> Index()
         {
+            //
               return _context.GymClasses != null ? 
                           View(await _context.GymClasses.ToListAsync()) :
                           Problem("Entity set 'ApplicationDbContext.GymClasses'  is null.");
