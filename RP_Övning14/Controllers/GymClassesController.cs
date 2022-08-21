@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -13,9 +14,11 @@ namespace RP_Övning14.Controllers
     public class GymClassesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public GymClassesController(ApplicationDbContext context)
+        public GymClassesController(UserManager<ApplicationUser> userManager, ApplicationDbContext context)
         {
+            _userManager = userManager;
             _context = context;
         }
 
@@ -160,5 +163,49 @@ namespace RP_Övning14.Controllers
         {
           return (_context.GymClasses?.Any(e => e.Id == id)).GetValueOrDefault();
         }
+        public async Task<IActionResult> BookingToogel(int? id)
+        {
+            if(id == null) return NotFound();
+
+            GymClass GC = _context.GymClasses.Where(e => e.Id == id).FirstOrDefault();
+            if (GC == null) return NotFound();
+
+            ApplicationUser user = await _userManager.GetUserAsync(User);
+            if (user == null) return RedirectToAction(nameof(Index));
+
+            if (GC.AttendingMembers.Any(e => e.ApplicationUserId == user.Id))
+            {      
+                ApplicationUserGymClass AURemove = _context.ApplicationUserGymClass.Where(e => e.ApplicationUserId == user.Id && e.GymClassId == GC.Id).FirstOrDefault();
+
+                _context.ApplicationUserGymClass.Remove(AURemove);
+                user.AttendedClasses.Remove(AURemove);
+                GC.AttendingMembers.Remove(AURemove);
+            }
+            else
+            {
+                ApplicationUserGymClass AGC = new ApplicationUserGymClass
+                {
+                    GymClassId = GC.Id,
+                    GymClass = GC,
+                    ApplicationUserId = user.Id,
+                    ApplicationUser = user
+                };
+                user.AttendedClasses.Add(AGC);
+                GC.AttendingMembers.Add(AGC);
+
+                _context.ApplicationUserGymClass.Add(AGC);
+            }
+
+            GymClass GCTemp = _context.GymClasses.Where(e => e.Id == id).FirstOrDefault();
+            _context.Entry(GCTemp).CurrentValues.SetValues(GC);
+
+            ApplicationUser AUemp = _context.ApplicationUsers.Where(e => e.Id == user.Id).FirstOrDefault();
+            _context.Entry(AUemp).CurrentValues.SetValues(user);
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+
     }
 }

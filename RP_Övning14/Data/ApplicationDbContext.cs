@@ -13,7 +13,7 @@ namespace RP_Övning14.Data
         }
         public DbSet<GymClass> GymClasses { get; set; }
 
-        public DbSet<ApplicationUser> ApplicationUser { get; set; }
+        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
         public DbSet<ApplicationUserGymClass> ApplicationUserGymClass { get; set; }
 

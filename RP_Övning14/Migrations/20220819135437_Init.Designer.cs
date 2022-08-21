@@ -12,7 +12,7 @@ using RP_Övning14.Data;
 namespace RP_Övning14.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220819122621_Init")]
+    [Migration("20220819135437_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -181,11 +181,9 @@ namespace RP_Övning14.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
