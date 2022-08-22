@@ -22,5 +22,6 @@ namespace RP_Övning14.Data
             modelBuilder.Entity<ApplicationUserGymClass>().HasKey(t => new { t.ApplicationUserId, t.GymClassId }); 
         
         }
+
     }
 }

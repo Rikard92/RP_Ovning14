@@ -64,11 +64,11 @@ namespace RP_Övning14.Controllers
         [ValidateAntiForgeryToken]
         [Authorize]
         public async Task<IActionResult> Create([Bind("Id,Name,StartTime,Duration,Description")] GymClass gymClass)
-        {
-            gymClass.AttendingMembers = new List<ApplicationUserGymClass>();
+        {            
             if (!ModelState.IsValid)
             {
                 gymClass.Duration = gymClass.Duration / 24;
+                gymClass.AttendingMembers = new List<ApplicationUserGymClass>();
                 _context.Add(gymClass);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -181,7 +181,13 @@ namespace RP_Övning14.Controllers
 
             ApplicationUser user = await _userManager.GetUserAsync(User);
             if (user == null) return RedirectToAction(nameof(Index));
+            if(GC.AttendingMembers == null)
+            {
+                GC.AttendingMembers = new List<ApplicationUserGymClass>();
+                GymClass Temp = _context.GymClasses.Where(e => e.Id == id).FirstOrDefault();
+                _context.Entry(Temp).CurrentValues.SetValues(GC);
 
+            }
             if (GC.AttendingMembers.Any(e => e.ApplicationUserId == user.Id))
             {      
                 ApplicationUserGymClass AURemove = _context.ApplicationUserGymClass.Where(e => e.ApplicationUserId == user.Id && e.GymClassId == GC.Id).FirstOrDefault();
@@ -199,6 +205,10 @@ namespace RP_Övning14.Controllers
                     ApplicationUserId = user.Id,
                     ApplicationUser = user
                 };
+                if(user.AttendedClasses == null)
+                {
+                    user.AttendedClasses = new List<ApplicationUserGymClass>();
+                }
                 user.AttendedClasses.Add(AGC);
                 GC.AttendingMembers.Add(AGC);
 
@@ -215,6 +225,9 @@ namespace RP_Övning14.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-
+        public IActionResult Error()
+        {
+            return View();
+        }
     }
 }
