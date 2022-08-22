@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -32,6 +33,7 @@ namespace RP_Övning14.Controllers
         }
 
         // GET: GymClasses/Details/5
+        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.GymClasses == null)
@@ -60,10 +62,13 @@ namespace RP_Övning14.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Create([Bind("Id,Name,StartTime,Duration,Description")] GymClass gymClass)
         {
-            if (ModelState.IsValid)
+            gymClass.AttendingMembers = new List<ApplicationUserGymClass>();
+            if (!ModelState.IsValid)
             {
+                gymClass.Duration = gymClass.Duration / 24;
                 _context.Add(gymClass);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -72,6 +77,7 @@ namespace RP_Övning14.Controllers
         }
 
         // GET: GymClasses/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.GymClasses == null)
@@ -92,6 +98,7 @@ namespace RP_Övning14.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,StartTime,Duration,Description")] GymClass gymClass)
         {
             if (id != gymClass.Id)
@@ -123,6 +130,7 @@ namespace RP_Övning14.Controllers
         }
 
         // GET: GymClasses/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.GymClasses == null)
@@ -163,6 +171,7 @@ namespace RP_Övning14.Controllers
         {
           return (_context.GymClasses?.Any(e => e.Id == id)).GetValueOrDefault();
         }
+        [Authorize]
         public async Task<IActionResult> BookingToogel(int? id)
         {
             if(id == null) return NotFound();
