@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
+using DocuSign.eSign.Model;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -123,8 +124,10 @@ namespace RP_Övning14.Areas.Identity.Pages.Account
             {
                 var user = CreateUser();
                 user.TimeOfRegistration = DateTime.Now;
+                user.FirstName = Input.FirstName;
+                user.LastName = Input.LastName;
 
-                await _userStore.SetUserNameAsync(user, Input.FirstName + " " + Input.LastName, CancellationToken.None);
+                await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
 

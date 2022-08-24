@@ -20,13 +20,15 @@ namespace RP_Övning14.Seed
 
             ArgumentNullException.ThrowIfNull(nameof(services));
 
+            EnsureDeleted(db);
+
             roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
             userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
 
             var roleNames = new[] { "Member", "Admin" };
             var adminEmail = "admin@gym.se";
-
+            //AdminPW123
             var gymClasses = GetGymClasses();
             await db.AddRangeAsync(gymClasses);
 
@@ -55,8 +57,11 @@ namespace RP_Övning14.Seed
 
             var admin = new ApplicationUser
             {
+                FirstName = "Adam",
+                LastName = "Aven",
                 UserName = adminEmail,
-                Email = adminEmail
+                Email = adminEmail,
+                EmailConfirmed = true
             };
 
             var result = await userManager.CreateAsync(admin, adminPW);
