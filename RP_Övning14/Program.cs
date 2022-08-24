@@ -12,7 +12,14 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
+{
+    options.SignIn.RequireConfirmedAccount = true;
+    options.Password.RequireDigit = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+
+})
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
@@ -21,11 +28,13 @@ builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// Changes are made in appSettings.json concerning keys around seeddata
-if (builder.Configuration.GetValue<bool>("IsSeedDatabase"))
-{
-    await app.AddSeedData();
-}
+await app.AddSeedData();
+
+//// Changes are made in appSettings.json concerning keys around seeddata
+//if (builder.Configuration.GetValue<bool>("IsSeedDatabase"))
+//{
+    
+//}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

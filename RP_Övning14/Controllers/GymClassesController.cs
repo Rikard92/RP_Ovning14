@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -26,10 +27,7 @@ namespace RP_Övning14.Controllers
         // GET: GymClasses
         public async Task<IActionResult> Index()
         {
-            //
-              return _context.GymClasses != null ? 
-                          View(await _context.GymClasses.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.GymClasses'  is null.");
+              return View(await _context.GymClasses.ToListAsync());
         }
 
         // GET: GymClasses/Details/5
@@ -174,52 +172,34 @@ namespace RP_Övning14.Controllers
         [Authorize]
         public async Task<IActionResult> BookingToogel(int? id)
         {
-            if(id == null) return NotFound();
+            if(id == null) return BadRequest();        
 
-            GymClass GC = _context.GymClasses.Where(e => e.Id == id).FirstOrDefault();
-            if (GC == null) return NotFound();
+            //ApplicationUser user = await _userManager.GetUserAsync(User);
 
-            ApplicationUser user = await _userManager.GetUserAsync(User);
-            if (user == null) return RedirectToAction(nameof(Index));
-            if(GC.AttendingMembers == null)
-            {
-                GC.AttendingMembers = new List<ApplicationUserGymClass>();
-                GymClass Temp = _context.GymClasses.Where(e => e.Id == id).FirstOrDefault();
-                _context.Entry(Temp).CurrentValues.SetValues(GC);
 
-            }
-            if (GC.AttendingMembers.Any(e => e.ApplicationUserId == user.Id))
-            {      
-                ApplicationUserGymClass AURemove = _context.ApplicationUserGymClass.Where(e => e.ApplicationUserId == user.Id && e.GymClassId == GC.Id).FirstOrDefault();
+            var userID = _userManager.GetUserId(User);
+            if (userID == null) return BadRequest();
 
-                _context.ApplicationUserGymClass.Remove(AURemove);
-                user.AttendedClasses.Remove(AURemove);
-                GC.AttendingMembers.Remove(AURemove);
-            }
-            else
+            //GymClass GC = _context.GymClasses.Include(l => l.AttendingMembers).FirstOrDefault(e => e.Id == id);
+            //if (GC == null) return BadRequest();
+
+            //var attending = GC?.AttendingMembers.FirstOrDefault(e => e.ApplicationUserId == userID);
+
+            var attending = await _context.ApplicationUserGymClass.FindAsync(userID, id);
+            if (attending == null)
             {
                 ApplicationUserGymClass AGC = new ApplicationUserGymClass
                 {
-                    GymClassId = GC.Id,
-                    GymClass = GC,
-                    ApplicationUserId = user.Id,
-                    ApplicationUser = user
+                    GymClassId = (int)id,
+                    ApplicationUserId = userID,
                 };
-                if(user.AttendedClasses == null)
-                {
-                    user.AttendedClasses = new List<ApplicationUserGymClass>();
-                }
-                user.AttendedClasses.Add(AGC);
-                GC.AttendingMembers.Add(AGC);
-
                 _context.ApplicationUserGymClass.Add(AGC);
             }
+            else
+            {
+                _context.ApplicationUserGymClass.Remove(attending);
+            }
 
-            GymClass GCTemp = _context.GymClasses.Where(e => e.Id == id).FirstOrDefault();
-            _context.Entry(GCTemp).CurrentValues.SetValues(GC);
-
-            ApplicationUser AUemp = _context.ApplicationUsers.Where(e => e.Id == user.Id).FirstOrDefault();
-            _context.Entry(AUemp).CurrentValues.SetValues(user);
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

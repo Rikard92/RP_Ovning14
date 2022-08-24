@@ -12,7 +12,7 @@ using RP_Övning14.Data;
 namespace RP_Övning14.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220819135437_Init")]
+    [Migration("20220824090252_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -211,6 +211,9 @@ namespace RP_Övning14.Migrations
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("TimeOfRegistration")
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
