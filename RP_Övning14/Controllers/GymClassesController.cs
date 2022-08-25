@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RP_Övning14.Data;
 using RP_Övning14.Models;
+using RP_Övning14.ViewModels;
 
 namespace RP_Övning14.Controllers
 {
@@ -27,7 +28,44 @@ namespace RP_Övning14.Controllers
         // GET: GymClasses
         public async Task<IActionResult> Index()
         {
-              return View(await _context.GymClasses.ToListAsync());
+            var userID = _userManager.GetUserId(User);
+            var viewModel = await GetGymClassesForUser(userID);
+              return View(viewModel);
+        }
+
+        public async Task<IActionResult> Bokade()
+        {
+            var userID = _userManager.GetUserId(User);
+            var viewModel = await GetGymBokedClassesForUser(userID);
+            return View(viewModel);
+        }
+
+        private async Task<List<GymClassesViewModel>> GetGymBokedClassesForUser(string userID)
+        {
+            return await _context.GymClasses.Include(l => l.AttendingMembers).Select(x => new GymClassesViewModel
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Description = x.Description,
+                Duration = x.Duration,
+                StartTime = x.StartTime,
+                isUserAttending = x.AttendingMembers.Any(x => x.ApplicationUserId == userID)
+
+            }).Where(x => x.isUserAttending == true).ToListAsync();
+        }
+
+        private async Task<List<GymClassesViewModel>> GetGymClassesForUser(string userID)
+        {
+            return await _context.GymClasses.Include(l => l.AttendingMembers).Select(x => new GymClassesViewModel
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Description = x.Description,
+                Duration = x.Duration,
+                StartTime = x.StartTime,                
+                isUserAttending = x.AttendingMembers.Any(x=> x.ApplicationUserId == userID)
+
+            }).ToListAsync();
         }
 
         // GET: GymClasses/Details/5

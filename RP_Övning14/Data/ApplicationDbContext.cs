@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using RP_Övning14.Models;
+using RP_Övning14.ViewModels;
 
 namespace RP_Övning14.Data
 {
@@ -22,6 +23,8 @@ namespace RP_Övning14.Data
             modelBuilder.Entity<ApplicationUserGymClass>().HasKey(t => new { t.ApplicationUserId, t.GymClassId }); 
         
         }
+
+        public DbSet<RP_Övning14.ViewModels.GymClassesViewModel>? GymClassesViewModel { get; set; }
 
     }
 }

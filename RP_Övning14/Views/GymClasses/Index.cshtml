@@ -1,4 +1,4 @@
-﻿@model IEnumerable<RP_Övning14.Models.GymClass>
+﻿@model IEnumerable<RP_Övning14.ViewModels.GymClassesViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -47,8 +47,16 @@
                         @Html.DisplayFor(modelItem => item.Description)
                     </td>
                     <td>
-                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                        <a asp-action="BookingToogel" asp-route-id="@item.Id">Book Class</a> |
+                        @if (item.isUserAttending)
+                        {
+                            <a asp-action="BookingToogel" asp-route-id="@item.Id">Av Booka</a>
+                        }
+                        else
+                        {
+                            <a asp-action="BookingToogel" asp-route-id="@item.Id">Booka</a>
+                        }
+                        |
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |                        
                         <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                     </td>
                 </tr>
