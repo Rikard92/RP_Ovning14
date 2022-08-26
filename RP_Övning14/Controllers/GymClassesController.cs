@@ -19,10 +19,13 @@ namespace RP_Övning14.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
+        public static bool DisplayOld;
+
         public GymClassesController(UserManager<ApplicationUser> userManager, ApplicationDbContext context)
         {
             _userManager = userManager;
             _context = context;
+            //DisplayOld = false;
         }
 
         // GET: GymClasses
@@ -30,19 +33,57 @@ namespace RP_Övning14.Controllers
         {
             var userID = _userManager.GetUserId(User);
             var viewModel = await GetGymClassesForUser(userID);
-              return View(viewModel);
+            ViewBag.DisplayOld = DisplayOld;
+            return View(viewModel);
         }
+
 
         public async Task<IActionResult> Bokade()
         {
             var userID = _userManager.GetUserId(User);
             var viewModel = await GetGymBokedClassesForUser(userID);
+            ViewBag.DisplayOld = DisplayOld;
             return View(viewModel);
+        }
+
+        public async Task<IActionResult>Historik()
+        {
+            var userID = _userManager.GetUserId(User);
+            var viewModel = await GetGymClassesHistoryForUser(userID);
+            return View(viewModel);
+        }
+
+        public async Task<IActionResult> ToggleOld()
+        {
+            DisplayOld = !DisplayOld;
+            return RedirectToAction(nameof(Index));
+        }
+
+        private async Task<List<GymClassesViewModel>> GetGymClassesForUser(string userID)
+        {
+            if (DisplayOld)
+            {
+                return await GetGymClasses(userID).ToListAsync();
+            }
+            else
+            {
+                return await GetGymClasses(userID).Where(x => x.StartTime > DateTime.Now).ToListAsync();
+            }            
         }
 
         private async Task<List<GymClassesViewModel>> GetGymBokedClassesForUser(string userID)
         {
-            return await _context.GymClasses.Include(l => l.AttendingMembers).Select(x => new GymClassesViewModel
+            return await GetGymClasses(userID).Where(x => x.isUserAttending == true && x.StartTime > DateTime.Now).ToListAsync();
+        }
+
+        private async Task<List<GymClassesViewModel>> GetGymClassesHistoryForUser(string userID)
+        {
+            return await GetGymClasses(userID).Where(x => x.isUserAttending == true && x.StartTime < DateTime.Now).ToListAsync();
+        }
+
+        private IQueryable<GymClassesViewModel> GetGymClasses(string userID)
+        {
+            return _context.GymClasses.Include(l => l.AttendingMembers).Select(x => new GymClassesViewModel
             {
                 Id = x.Id,
                 Name = x.Name,
@@ -51,21 +92,7 @@ namespace RP_Övning14.Controllers
                 StartTime = x.StartTime,
                 isUserAttending = x.AttendingMembers.Any(x => x.ApplicationUserId == userID)
 
-            }).Where(x => x.isUserAttending == true).ToListAsync();
-        }
-
-        private async Task<List<GymClassesViewModel>> GetGymClassesForUser(string userID)
-        {
-            return await _context.GymClasses.Include(l => l.AttendingMembers).Select(x => new GymClassesViewModel
-            {
-                Id = x.Id,
-                Name = x.Name,
-                Description = x.Description,
-                Duration = x.Duration,
-                StartTime = x.StartTime,                
-                isUserAttending = x.AttendingMembers.Any(x=> x.ApplicationUserId == userID)
-
-            }).ToListAsync();
+            });
         }
 
         // GET: GymClasses/Details/5

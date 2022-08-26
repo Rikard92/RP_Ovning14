@@ -21,24 +21,31 @@ namespace RP_Övning14.Seed
 
             ArgumentNullException.ThrowIfNull(nameof(services));
 
-          //  EnsureDeleted(db);
-          db.gym
+            //  EnsureDeleted(db);
+            if (db.GymClasses.Count()<1)
+            {
+                var gymClasses = GetGymClasses();
+                await db.AddRangeAsync(gymClasses);
+            }
+            if (db.Users.Count() < 1)
+            {
+                roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
-            roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+                userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
 
-            userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+                var roleNames = new[] { "Member", "Admin" };
+                var adminEmail = "admin@gym.se";
+                //AdminPW123
 
-            var roleNames = new[] { "Member", "Admin" };
-            var adminEmail = "admin@gym.se";
-            //AdminPW123
-            var gymClasses = GetGymClasses();
-            await db.AddRangeAsync(gymClasses);
 
-            await AddRolesAsync(roleNames);
+                await AddRolesAsync(roleNames);
 
-            var admin = await AddAdminAsync(adminEmail, adminPW);
+                var admin = await AddAdminAsync(adminEmail, adminPW);
 
-            await AddToRolesAsync(admin, roleNames);
+                await AddToRolesAsync(admin, roleNames);
+            }
+
+            
         }
 
         private static async Task AddToRolesAsync(ApplicationUser admin, string[] roleNames)

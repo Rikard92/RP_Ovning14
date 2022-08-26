@@ -1,0 +1,37 @@
+﻿.anim-main {
+    height: 20rem;
+    width: 100%;
+    animation-name: kf_fadein;
+    animation-duration: 4000ms;
+    overflow: hidden;
+    transition-timing-function: ease-in;
+    transform-style: preserve-3d;
+
+}
+
+
+@keyframes kf_from_b_t {
+
+    0% {
+        transform: rotate(10deg);
+        perspective: 100px;
+        height: 0;
+    }
+
+    100% {
+        transform: rotate(0deg);
+        perspective: 0;
+        height: 300px;
+    }
+}
+
+@keyframes kf_fadein {
+    0% {
+
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
