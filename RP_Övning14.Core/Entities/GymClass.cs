@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace RP_Övning14.Models
+namespace RP_Övning14.Core.Entities
 {
     public class GymClass
     {
@@ -9,7 +9,7 @@ namespace RP_Övning14.Models
         public DateTime StartTime { get; set; }
         public TimeSpan Duration { get; set; }
         public DateTime EndTime { get { return StartTime + Duration; } }
-        public String Description { get; set; }
+        public string Description { get; set; }
 
         public ICollection<ApplicationUserGymClass> AttendingMembers { get; set; }
     }

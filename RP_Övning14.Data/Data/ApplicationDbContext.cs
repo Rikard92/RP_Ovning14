@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using RP_Övning14.Models;
-using RP_Övning14.ViewModels;
+using RP_Övning14.Core.Entities;
+using RP_Övning14.Core.ViewModels;
 
 namespace RP_Övning14.Data
 {
@@ -14,7 +14,7 @@ namespace RP_Övning14.Data
         }
         public DbSet<GymClass> GymClasses { get; set; }
 
-        public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+       // public DbSet<ApplicationUser> ApplicationUsers { get; set; }
 
         public DbSet<ApplicationUserGymClass> ApplicationUserGymClass { get; set; }
 
@@ -24,7 +24,7 @@ namespace RP_Övning14.Data
         
         }
 
-        public DbSet<RP_Övning14.ViewModels.GymClassesViewModel>? GymClassesViewModel { get; set; }
+       // public DbSet<GymClassesViewModel>? GymClassesViewModel { get; set; }
 
     }
 }

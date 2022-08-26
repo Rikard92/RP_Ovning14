@@ -1,18 +1,20 @@
 ﻿
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Graph;
 using RP_Övning14.Data;
-using RP_Övning14.Models;
+using RP_Övning14.Seed;
 using System;
 
-namespace RP_Övning14.Seed
-{
+namespace RP_Övning14.Data.Seed;
     public static class AddSeedDataExtension
     {
 
-        public static async Task<IApplicationBuilder> AddSeedData(this WebApplication app)
+        public static async Task<IApplicationBuilder> AddSeedData(this IApplicationBuilder app)
         {
-            using (var scope = app.Services.CreateScope())
+            using (var scope = app.ApplicationServices.CreateScope())
             {
                 var service = scope.ServiceProvider;
                 var db = service.GetRequiredService<ApplicationDbContext>();
@@ -37,4 +39,5 @@ namespace RP_Övning14.Seed
 
 
     }
-}
+
+

@@ -4,7 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <UserSecretsId>aspnet-RP_Övning14-7ADEDCF8-0D89-42BE-8A99-52F5B03FFBCA</UserSecretsId>
+    <UserSecretsId>aspnet-RP_Övning14</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,6 +16,11 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.8" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.8" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RP_Övning14.Core\RP_Övning14.Core.csproj" />
+    <ProjectReference Include="..\RP_Övning14.Data\RP_Övning14.Data.csproj" />
   </ItemGroup>
 
 </Project>

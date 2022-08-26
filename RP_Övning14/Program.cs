@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using RP_Övning14.Data.Seed;
 using RP_Övning14.Data;
-using RP_Övning14.Models;
-using RP_Övning14.Seed;
+using RP_Övning14.Core.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿
 
-namespace RP_Övning14.Models
+using Microsoft.AspNetCore.Identity;
+
+namespace RP_Övning14.Core.Entities
 {
     public class ApplicationUser : IdentityUser
     {

@@ -8,8 +8,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using RP_Övning14.Core.Entities;
 using RP_Övning14.Data;
-using RP_Övning14.Models;
 using RP_Övning14.ViewModels;
 
 namespace RP_Övning14.Controllers

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace RP_Övning14.Models
+namespace RP_Övning14.Core.Entities
 {
     public class ApplicationUserGymClass
     {

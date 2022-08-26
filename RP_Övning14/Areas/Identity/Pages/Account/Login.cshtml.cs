@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using RP_Övning14.Models;
+using RP_Övning14.Core.Entities;
 
 namespace RP_Övning14.Areas.Identity.Pages.Account
 {

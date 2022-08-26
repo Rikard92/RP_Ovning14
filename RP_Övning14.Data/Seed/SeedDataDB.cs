@@ -1,8 +1,9 @@
 ﻿using Bogus;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using RP_Övning14.Core.Entities;
 using RP_Övning14.Data;
-using RP_Övning14.Models;
 
 namespace RP_Övning14.Seed
 {
@@ -20,7 +21,8 @@ namespace RP_Övning14.Seed
 
             ArgumentNullException.ThrowIfNull(nameof(services));
 
-            EnsureDeleted(db);
+          //  EnsureDeleted(db);
+          db.gym
 
             roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 

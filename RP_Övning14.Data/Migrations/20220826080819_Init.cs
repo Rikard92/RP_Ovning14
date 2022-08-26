@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace RP_Övning14.Migrations
+namespace RP_Övning14.Data.Migrations
 {
     public partial class Init : Migration
     {
@@ -65,6 +65,23 @@ namespace RP_Övning14.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_GymClasses", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "GymClassesViewModel",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StartTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Duration = table.Column<TimeSpan>(type: "time", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    isUserAttending = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GymClassesViewModel", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -261,6 +278,9 @@ namespace RP_Övning14.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "GymClassesViewModel");
 
             migrationBuilder.DropTable(
                 name: "GymClasses");

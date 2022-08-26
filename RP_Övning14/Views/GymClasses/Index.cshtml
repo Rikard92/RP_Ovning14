@@ -33,33 +33,34 @@
         <tbody>
             @foreach (var item in Model)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.StartTime)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Duration)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Description)
-                    </td>
-                    <td>
-                        @if (item.isUserAttending)
-                        {
-                            <a asp-action="BookingToogel" asp-route-id="@item.Id">Av Booka</a>
-                        }
-                        else
-                        {
-                            <a asp-action="BookingToogel" asp-route-id="@item.Id">Booka</a>
-                        }
-                        |
-                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |                        
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                    </td>
-                </tr>
+                @if(item.StartTime>DateTime.Now){
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.StartTime)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Duration)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td>
+                            <a asp-action="BookingToogel" asp-route-id="@item.Id">@(item.isUserAttending ? "Av Booka" : "Book")</a>
+                            <span>|</span>
+
+                            @if(User.IsInRole("Admin")){
+                                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> <span>|</span>
+                                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                            }
+                            
+                            
+                        </td>
+                    </tr>
+                }
+                
             }
         </tbody>
     </table>

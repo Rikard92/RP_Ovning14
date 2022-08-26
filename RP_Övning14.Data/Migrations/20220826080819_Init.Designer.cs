@@ -9,10 +9,10 @@ using RP_Övning14.Data;
 
 #nullable disable
 
-namespace RP_Övning14.Migrations
+namespace RP_Övning14.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220824090252_Init")]
+    [Migration("20220826080819_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -161,7 +161,7 @@ namespace RP_Övning14.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("RP_Övning14.Models.ApplicationUser", b =>
+            modelBuilder.Entity("RP_Övning14.Core.Entities.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -235,7 +235,7 @@ namespace RP_Övning14.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("RP_Övning14.Models.ApplicationUserGymClass", b =>
+            modelBuilder.Entity("RP_Övning14.Core.Entities.ApplicationUserGymClass", b =>
                 {
                     b.Property<string>("ApplicationUserId")
                         .HasColumnType("nvarchar(450)");
@@ -250,7 +250,7 @@ namespace RP_Övning14.Migrations
                     b.ToTable("ApplicationUserGymClass");
                 });
 
-            modelBuilder.Entity("RP_Övning14.Models.GymClass", b =>
+            modelBuilder.Entity("RP_Övning14.Core.Entities.GymClass", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -277,6 +277,36 @@ namespace RP_Övning14.Migrations
                     b.ToTable("GymClasses");
                 });
 
+            modelBuilder.Entity("RP_Övning14.Core.ViewModels.GymClassesViewModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<TimeSpan>("Duration")
+                        .HasColumnType("time");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("isUserAttending")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("GymClassesViewModel");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -288,7 +318,7 @@ namespace RP_Övning14.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("RP_Övning14.Models.ApplicationUser", null)
+                    b.HasOne("RP_Övning14.Core.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -297,7 +327,7 @@ namespace RP_Övning14.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("RP_Övning14.Models.ApplicationUser", null)
+                    b.HasOne("RP_Övning14.Core.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -312,7 +342,7 @@ namespace RP_Övning14.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RP_Övning14.Models.ApplicationUser", null)
+                    b.HasOne("RP_Övning14.Core.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -321,22 +351,22 @@ namespace RP_Övning14.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("RP_Övning14.Models.ApplicationUser", null)
+                    b.HasOne("RP_Övning14.Core.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("RP_Övning14.Models.ApplicationUserGymClass", b =>
+            modelBuilder.Entity("RP_Övning14.Core.Entities.ApplicationUserGymClass", b =>
                 {
-                    b.HasOne("RP_Övning14.Models.ApplicationUser", "ApplicationUser")
+                    b.HasOne("RP_Övning14.Core.Entities.ApplicationUser", "ApplicationUser")
                         .WithMany("AttendedClasses")
                         .HasForeignKey("ApplicationUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RP_Övning14.Models.GymClass", "GymClass")
+                    b.HasOne("RP_Övning14.Core.Entities.GymClass", "GymClass")
                         .WithMany("AttendingMembers")
                         .HasForeignKey("GymClassId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -347,12 +377,12 @@ namespace RP_Övning14.Migrations
                     b.Navigation("GymClass");
                 });
 
-            modelBuilder.Entity("RP_Övning14.Models.ApplicationUser", b =>
+            modelBuilder.Entity("RP_Övning14.Core.Entities.ApplicationUser", b =>
                 {
                     b.Navigation("AttendedClasses");
                 });
 
-            modelBuilder.Entity("RP_Övning14.Models.GymClass", b =>
+            modelBuilder.Entity("RP_Övning14.Core.Entities.GymClass", b =>
                 {
                     b.Navigation("AttendingMembers");
                 });
